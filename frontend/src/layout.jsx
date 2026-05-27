@@ -45,23 +45,25 @@ export function Navbar({ route, navigate, openMobile, setOpenMobile }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
   return (
-    <header className={`sticky top-0 z-40 bg-white/95 backdrop-blur transition-shadow ${scrolled ? 'shadow-[0_4px_24px_-12px_rgba(36,11,54,0.12)]' : ''} border-b border-soft-lavender/60`}>
-      <div className="mx-auto max-w-7xl px-5 sm:px-7 lg:px-10 h-[72px] flex items-center justify-between gap-4">
-        <button onClick={() => navigate('home')} className="shrink-0"><Logo size={38} /></button>
-        <nav className="hidden lg:flex items-center gap-1">
-          {items.map(it => (
-            <button key={it.to} onClick={() => navigate(it.to)} className={`whitespace-nowrap px-3.5 py-2 rounded-full text-[14.5px] font-medium transition ${route === it.to ? 'text-primary bg-soft-lavender/70' : 'text-deep/80 hover:text-primary hover:bg-soft-lavender/40'}`}>
-              {it.label}
-            </button>
-          ))}
-        </nav>
-        <div className="flex items-center gap-2">
-          <Btn onClick={() => navigate('appointment')} variant="primary" size="md" className="hidden sm:inline-flex" iconRight={<UI name="arrowRight" className="w-4 h-4" />}>Book Appointment</Btn>
-          <button onClick={() => setOpenMobile(true)} className="lg:hidden w-10 h-10 rounded-full bg-soft-lavender/50 flex items-center justify-center text-primary"><UI name="menu" /></button>
+    <>
+      <header className={`sticky top-0 z-40 bg-white/95 backdrop-blur transition-shadow ${scrolled ? 'shadow-[0_4px_24px_-12px_rgba(36,11,54,0.12)]' : ''} border-b border-soft-lavender/60`}>
+        <div className="mx-auto max-w-7xl px-5 sm:px-7 lg:px-10 h-[72px] flex items-center justify-between gap-4">
+          <button onClick={() => navigate('home')} className="shrink-0"><Logo size={38} /></button>
+          <nav className="hidden lg:flex items-center gap-1">
+            {items.map(it => (
+              <button key={it.to} onClick={() => navigate(it.to)} className={`whitespace-nowrap px-3.5 py-2 rounded-full text-[14.5px] font-medium transition ${route === it.to ? 'text-primary bg-soft-lavender/70' : 'text-deep/80 hover:text-primary hover:bg-soft-lavender/40'}`}>
+                {it.label}
+              </button>
+            ))}
+          </nav>
+          <div className="flex items-center gap-2">
+            <Btn onClick={() => navigate('appointment')} variant="primary" size="md" className="hidden sm:inline-flex" iconRight={<UI name="arrowRight" className="w-4 h-4" />}>Book Appointment</Btn>
+            <button onClick={() => setOpenMobile(true)} className="lg:hidden w-10 h-10 rounded-full bg-soft-lavender/50 flex items-center justify-center text-primary"><UI name="menu" /></button>
+          </div>
         </div>
-      </div>
+      </header>
       {openMobile && <MobileNav navigate={navigate} close={() => setOpenMobile(false)} route={route} />}
-    </header>
+    </>
   );
 }
 
