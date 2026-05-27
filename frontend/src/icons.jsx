@@ -6,6 +6,7 @@ import { AdminLoginPage, AdminDashboard, AdminAppointmentsPage, AdminDoctorsPage
 import { HomePage, Hero, TrustStrip, EmergencyStrip, QuickServiceCards, AboutPreview, DepartmentsPreview, PatientJourney, FacilitiesPreview, DoctorsPreview, DoctorCard, FeePreview, Testimonials, BlogPreview, ContactCTA } from './pages-home.jsx';
 import { AboutPage, DepartmentsPage, DoctorsPage, DoctorDetailPage, AppointmentPage, FeesPage, FacilitiesPage, ContactPage, BlogPage } from './pages-public.jsx';
 import { Btn, Badge, StatusBadge, Img, PH, Section, Container, SectionEyebrow, SectionTitle, SectionSub, Field, Input, Textarea, Select, StatCard } from './ui.jsx';
+import logoImg from './assets/logo.png';
 
 
 // Inline SVG icons — medical + UI. Two sets:
@@ -97,26 +98,11 @@ export function UI({ name, className = 'w-5 h-5', color = 'currentColor' }) {
 
 // Logo — recreates the PMH mark + wordmark in inline SVG
 function Logo({ variant = 'dark', size = 36 }) {
-  const stop = variant === 'light' ? '#fff' : '#5B1A7A';
-  const stop2 = variant === 'light' ? '#EAD7FF' : '#8B2CC2';
   const wordColor = variant === 'light' ? '#fff' : '#5B1A7A';
   const subColor = variant === 'light' ? '#EAD7FF' : '#7C2BA3';
   return (
     <div className="flex items-center gap-3 shrink-0">
-      <svg width={size + 4} height={size + 4} viewBox="0 0 64 64" aria-hidden="true" className="shrink-0">
-        <defs>
-          <linearGradient id={`pmhg-${variant}`} x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0" stopColor={stop} />
-            <stop offset="1" stopColor={stop2} />
-          </linearGradient>
-        </defs>
-        <g fill="none" stroke={`url(#pmhg-${variant})`} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          {Array.from({length: 2}).map((_, i) => (
-            <rect key={i} x="15" y="15" width="34" height="34" rx="10" transform={`rotate(${i * 45} 32 32)`} />
-          ))}
-        </g>
-        <text x="32" y="36" textAnchor="middle" fontFamily="Outfit, sans-serif" fontWeight="800" fontSize="13" fill={wordColor} letterSpacing="-0.5">pmh</text>
-      </svg>
+      <img src={logoImg} alt="Panacea Meridian Hospitals Logo" style={{ width: size, height: size }} className="shrink-0 object-contain" />
       <div className="leading-none whitespace-nowrap">
         <div className="display font-extrabold tracking-tight" style={{color: wordColor, fontSize: Math.round(size * 0.40), letterSpacing: '-0.01em'}}>PANACEA MERIDIAN</div>
         <div className="display font-bold" style={{color: subColor, fontSize: Math.round(size * 0.26), letterSpacing: '0.32em', marginTop: 4}}>HOSPITALS</div>

@@ -7,6 +7,7 @@ import { departmentService } from '../services/departmentService.js';
 import { feeService } from '../services/feeService.js';
 import { articleService } from '../services/articleService.js';
 import { settingsService } from '../services/settingsService.js';
+import { enquiryService } from '../services/enquiryService.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
@@ -287,6 +288,44 @@ export const adminController = {
       const { id } = req.params;
       await articleService.delete(id);
       return res.status(200).json({ success: true, message: 'Article deleted successfully.' });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  /* --- ENQUIRIES CRUD --- */
+
+  async getEnquiries(req, res, next) {
+    try {
+      const enquiries = await enquiryService.getAll();
+      return res.status(200).json({
+        success: true,
+        data: enquiries
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateEnquiryStatus(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      const updated = await enquiryService.updateStatus(id, status);
+      if (!updated) {
+        return res.status(404).json({ success: false, message: 'Enquiry not found.' });
+      }
+      return res.status(200).json({ success: true, data: updated });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async deleteEnquiry(req, res, next) {
+    try {
+      const { id } = req.params;
+      await enquiryService.delete(id);
+      return res.status(200).json({ success: true, message: 'Enquiry deleted successfully.' });
     } catch (error) {
       next(error);
     }

@@ -25,6 +25,19 @@ axios.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      localStorage.removeItem('admin_token');
+      if (!window.location.pathname.startsWith('/admin/login')) {
+        window.location.href = '/admin/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>

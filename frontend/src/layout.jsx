@@ -56,8 +56,7 @@ export function Navbar({ route, navigate, openMobile, setOpenMobile }) {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Btn onClick={() => navigate('appointment')} variant="primary" size="md" className="hidden sm:inline-flex" iconRight={<UI name="arrowRight" className="w-4 h-4" />}>Make Appointment</Btn>
-          <button onClick={() => navigate('admin-login')} className="hidden md:inline-flex text-[13px] font-semibold text-primary hover:text-deep px-3 py-2 rounded-full hover:bg-soft-lavender/40">Admin</button>
+          <Btn onClick={() => navigate('appointment')} variant="primary" size="md" className="hidden sm:inline-flex" iconRight={<UI name="arrowRight" className="w-4 h-4" />}>Book Appointment</Btn>
           <button onClick={() => setOpenMobile(true)} className="lg:hidden w-10 h-10 rounded-full bg-soft-lavender/50 flex items-center justify-center text-primary"><UI name="menu" /></button>
         </div>
       </div>
@@ -125,13 +124,13 @@ export function Footer({ navigate }) {
         <div>
           <h4 className="font-bold text-white mb-5">Quick Links</h4>
           <ul className="space-y-3 text-sm text-white/70">
-            {[['Home','home'],['About Us','about'],['Departments','departments'],['Our Doctors','doctors'],['Facilities','facilities'],['Fee Structure','fees'],['Health Articles','blog'],['Contact','contact']].map(([l,t]) =>
+            {[['Home','home'],['About Us','about'],['Departments','departments'],['Our Doctors','doctors'],['Facilities','facilities'],['Fee Structure','fees'],['Health Articles','blog'],['Contact','contact'],['Admin Portal','admin-login']].map(([l,t]) =>
               <li key={t}><button onClick={()=>navigate(t)} className="hover:text-accent inline-flex items-center gap-2"><UI name="chevRight" className="w-3 h-3" />{l}</button></li>
             )}
           </ul>
         </div>
         <div>
-          <h4 className="font-bold text-white mb-5">Make Appointment</h4>
+          <h4 className="font-bold text-white mb-5">Book Appointment</h4>
           <p className="text-white/60 text-sm mb-4">Patient safety is our utmost priority.</p>
           <div className="rounded-2xl grad-purple p-5">
             <div className="text-soft-lavender text-xs uppercase tracking-widest">Appointments</div>

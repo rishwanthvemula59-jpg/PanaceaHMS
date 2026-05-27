@@ -40,7 +40,7 @@ export function AboutPage({ navigate }) {
             <SectionEyebrow>Who we are</SectionEyebrow>
             <SectionTitle>A hospital built around the patient.</SectionTitle>
             <SectionSub className="mt-5">{HOSPITAL.unit}. We bring senior consultants, modern infrastructure and reliable critical-care services to a part of Hyderabad that has long needed a hospital you can fully trust.</SectionSub>
-            <div className="grid grid-cols-3 gap-5 mt-9">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-9">
               {[
                 { v: '20+', l: 'Specialities' },
                 { v: '50+', l: 'Consultants' },
@@ -275,7 +275,7 @@ export function DoctorDetailPage({ navigate }) {
         <Container className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
             <div className="card p-6 md:p-8 flex flex-col md:flex-row gap-7 items-start">
-              <Img src={d.photo} alt={d.name} aspect="1/1" className="w-full md:w-56 shrink-0" label={d.name} />
+              <Img src={d.photo} alt={d.name} aspect="1/1" className="w-full max-w-[240px] mx-auto md:mx-0 md:w-56 shrink-0" label={d.name} />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   {d.avail === 'available' ? <Badge tone="success">● Available</Badge> : <Badge tone="warn">On Call</Badge>}
@@ -407,7 +407,7 @@ export function AppointmentPage({ navigate }) {
                 setSubmitted(true);
               } catch(err) {
                 console.error(err);
-                alert("Failed to submit appointment. Please try again.");
+                window.toast("Failed to submit appointment. Please try again.", "error");
               }
             }}>
             <div>
@@ -629,11 +629,11 @@ export function ContactPage({ navigate }) {
             };
             try {
               await axios.post('http://localhost:5000/api/enquiries', data);
-              alert('Message sent. We will get back to you shortly.');
+              window.toast('Message sent. We will get back to you shortly.', 'success');
               e.target.reset();
             } catch(err) {
               console.error(err);
-              alert('Failed to send message. Please try again.');
+              window.toast('Failed to send message. Please try again.', 'error');
             }
           }}>
             <h3 className="display text-2xl font-bold text-deep">Send us a message</h3>

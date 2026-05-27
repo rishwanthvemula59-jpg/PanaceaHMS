@@ -19,6 +19,16 @@ export function AdminLoginPage({ navigate }) {
   const [resetStep, setResetStep] = React.useState(0);
   const [resetCode, setResetCode] = React.useState('');
   const [newPassword, setNewPassword] = React.useState('');
+  const [remember, setRemember] = React.useState(false);
+
+  React.useEffect(() => {
+    const savedEmail = localStorage.getItem('admin_remember_email');
+    const isRemembered = localStorage.getItem('admin_remember_checked') === 'true';
+    if (isRemembered && savedEmail) {
+      setU(savedEmail);
+      setRemember(true);
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,19 +36,27 @@ export function AdminLoginPage({ navigate }) {
       const response = await axios.post('http://localhost:5000/api/admin/login', { email: u, password: p });
       if (response.data.success) {
         localStorage.setItem('admin_token', response.data.token);
+        if (remember) {
+          localStorage.setItem('admin_remember_email', u);
+          localStorage.setItem('admin_remember_checked', 'true');
+        } else {
+          localStorage.removeItem('admin_remember_email');
+          localStorage.removeItem('admin_remember_checked');
+        }
+        window.toast('Login successful!', 'success');
         navigate('admin');
       } else {
-        alert(response.data.message || 'Login failed.');
+        window.toast(response.data.message || 'Login failed.', 'error');
       }
     } catch (error) {
-      alert(error.response?.data?.message || 'Login failed. Please verify credentials.');
+      window.toast(error.response?.data?.message || 'Login failed. Please verify credentials.', 'error');
     }
   };
 
   const handleForgot = (e) => {
     e.preventDefault();
     setResetStep(1);
-    alert('Verification code sent to 6281042207');
+    window.toast('Verification code sent to 6281042207', 'info');
   };
 
   const handleVerify = (e) => {
@@ -46,14 +64,14 @@ export function AdminLoginPage({ navigate }) {
     if (resetCode === '123456') {
       setResetStep(2);
     } else {
-      alert('Invalid verification code.');
+      window.toast('Invalid verification code.', 'error');
     }
   };
 
   const handleChangePassword = (e) => {
     e.preventDefault();
     localStorage.setItem('admin_password', newPassword);
-    alert('Password updated successfully! Please login with your new password.');
+    window.toast('Password updated successfully! Please login with your new password.', 'success');
     setResetStep(0);
     setP('');
   };
@@ -105,7 +123,10 @@ export function AdminLoginPage({ navigate }) {
                 </div>
               </Field>
               <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2 text-muted"><input type="checkbox" className="w-4 h-4 accent-primary" />Remember me</label>
+                <label className="flex items-center gap-2 text-muted">
+                  <input type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)} className="w-4 h-4 accent-primary" />
+                  Remember me
+                </label>
                 <a className="text-primary font-semibold cursor-pointer" onClick={handleForgot}>Forgot password?</a>
               </div>
               <Btn type="submit" variant="primary" size="lg" className="w-full" iconRight={<UI name="arrowRight" className="w-4 h-4" />}>Sign In to Dashboard</Btn>
@@ -161,6 +182,7 @@ function AdminShell({ active, navigate, children, title, subtitle, actions, sear
     { id: 'admin-departments', label: 'Departments', icon: 'building' },
     { id: 'admin-fees', label: 'Fees', icon: 'money' },
     { id: 'admin-blog', label: 'Blog', icon: 'article' },
+    { id: 'admin-messages', label: 'Messages', icon: 'mail' },
     { id: 'admin-settings', label: 'Settings', icon: 'settings' },
   ];
   return (
@@ -479,10 +501,11 @@ export function AdminAppointmentsPage({ navigate }) {
     try {
       const fd = new FormData(e.target);
       const data = Object.fromEntries(fd.entries());
-
       const payload = {
         patient: data.patient,
         phone: data.phone,
+        age: parseInt(data.age, 10),
+        gender: data.gender,
         dept: data.dept,
         doctor: data.doctor,
         date: data.date,
@@ -494,10 +517,11 @@ export function AdminAppointmentsPage({ navigate }) {
       await axios.post('http://localhost:5000/api/appointments', payload);
 
       setShowModal(false);
+      window.toast('Appointment created successfully.', 'success');
       refresh();
     } catch (error) {
       console.error('Failed to create appointment:', error);
-      alert('Failed to create appointment. Please try again.');
+      window.toast('Failed to create appointment. Please try again.', 'error');
     }
   };
 
@@ -510,12 +534,12 @@ export function AdminAppointmentsPage({ navigate }) {
       refresh();
     } catch (error) {
       console.error('Failed to update appointment:', error);
-      alert('Failed to update appointment status.');
+      window.toast('Failed to update appointment status.', 'error');
     }
   };
 
   const exportPDF = () => {
-    if (!filtered.length) return alert('No data to export');
+    if (!filtered.length) return window.toast('No data to export', 'info');
 
     const printWindow = window.open('', '_blank');
 
@@ -828,9 +852,9 @@ export function AdminAppointmentsPage({ navigate }) {
                             variant="ghost"
                             size="sm"
                             onClick={() => {
-                              if (confirm('Cancel this appointment?')) {
+                              window.showConfirm('Cancel this appointment?', () => {
                                 updateAppointmentStatus(a._id || a.ref, 'Cancelled');
-                              }
+                              });
                             }}
                           >
                             Cancel
@@ -854,9 +878,9 @@ export function AdminAppointmentsPage({ navigate }) {
                             icon="eye"
                             tip="Cancel Appointment"
                             onClick={() => {
-                              if (confirm('Cancel this appointment?')) {
+                              window.showConfirm('Cancel this appointment?', () => {
                                 updateAppointmentStatus(a._id || a.ref, 'Cancelled');
-                              }
+                              });
                             }}
                           />
                         </>
@@ -898,6 +922,20 @@ export function AdminAppointmentsPage({ navigate }) {
                       {d.name}
                     </option>
                   ))}
+                </Select>
+              </Field>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Age" required>
+                <Input name="age" type="number" placeholder="32" min="0" max="130" required />
+              </Field>
+
+              <Field label="Gender" required>
+                <Select name="gender" required>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
                 </Select>
               </Field>
             </div>
@@ -996,10 +1034,10 @@ export function AdminDoctorsPage({ navigate }) {
   }, [doctorsList, filterDept, q]);
 
   const handleDelete = async (id) => {
-    if (confirm('Are you sure you want to delete this doctor?')) {
+    window.showConfirm('Are you sure you want to delete this doctor?', async () => {
       await axios.delete('http://localhost:5000/api/doctors/' + id);
       refresh();
-    }
+    });
   };
 
   const submitForm = async (e) => {
@@ -1125,10 +1163,10 @@ export function AdminDepartmentsPage({ navigate }) {
   }, [deptList, q]);
 
   const handleDelete = async (slug) => {
-    if (confirm('Are you sure you want to delete this department?')) {
+    window.showConfirm('Are you sure you want to delete this department?', async () => {
       await axios.delete('http://localhost:5000/api/departments/' + slug);
       refresh();
-    }
+    });
   };
 
   const submitForm = async (e) => {
@@ -1215,10 +1253,10 @@ export function AdminFeesPage({ navigate }) {
   }, [fees, q]);
 
   const handleDelete = async (id) => {
-    if (confirm('Delete this fee item?')) {
+    window.showConfirm('Delete this fee item?', async () => {
       await axios.delete('http://localhost:5000/api/fees/' + id);
       refresh();
-    }
+    });
   };
 
   const submit = async (e) => {
@@ -1276,7 +1314,7 @@ export function AdminSettingsPage({ navigate }) {
   React.useEffect(() => { axios.get('http://localhost:5000/api/settings').then(res => setSettings(res.data)).catch(console.error); }, []);
   const save = async () => {
     await axios.put('http://localhost:5000/api/settings', settings);
-    alert('Settings Saved!');
+    window.toast('Settings Saved!', 'success');
   };
   const set = (k, v) => setSettings(s => ({ ...s, [k]: v }));
 
@@ -1331,10 +1369,10 @@ export function AdminBlogPage({ navigate }) {
   }, [articles, q]);
 
   const handleDelete = async (id) => {
-    if (confirm('Delete article?')) {
+    window.showConfirm('Delete article?', async () => {
       await axios.delete('http://localhost:5000/api/articles/' + id);
       refresh();
-    }
+    });
   };
 
   const submit = async (e) => {
@@ -1390,7 +1428,7 @@ export function Modal({ children, onClose, title }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-5">
       <div className="absolute inset-0 bg-deep/60 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="relative bg-white rounded-3xl shadow-cardHover w-full max-w-lg p-7">
+      <div className="relative bg-white rounded-3xl shadow-cardHover w-full max-w-lg p-7 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
           <h3 className="display text-xl font-bold text-deep">{title}</h3>
           <button onClick={onClose} className="w-9 h-9 rounded-full bg-soft-lavender/60 text-primary flex items-center justify-center"><UI name="close" className="w-4 h-4" /></button>
@@ -1401,4 +1439,142 @@ export function Modal({ children, onClose, title }) {
   );
 }
 
-Object.assign(window, { AdminLoginPage, AdminDashboard, AdminAppointmentsPage, AdminDoctorsPage, AdminDepartmentsPage, AdminFeesPage, AdminSettingsPage, AdminBlogPage });
+/* -------------------- MESSAGES MGMT -------------------- */
+export function AdminMessagesPage({ navigate }) {
+  const [messagesList, setMessagesList] = React.useState([]);
+  const [q, setQ] = React.useState('');
+  const [statusFilter, setStatusFilter] = React.useState('all');
+
+  const refresh = () =>
+    axios
+      .get('http://localhost:5000/api/admin/enquiries')
+      .then((res) => setMessagesList(res.data.data || []))
+      .catch(console.error);
+
+  React.useEffect(() => {
+    refresh();
+  }, []);
+
+  const filtered = messagesList
+    .filter((m) => {
+      const name = (m.name || '').toLowerCase();
+      const subject = (m.subject || '').toLowerCase();
+      const message = (m.message || '').toLowerCase();
+      const search = q.toLowerCase();
+      return name.includes(search) || subject.includes(search) || message.includes(search);
+    })
+    .filter((m) => statusFilter === 'all' || m.status === statusFilter);
+
+  const updateStatus = async (id, newStatus) => {
+    try {
+      await axios.put(`http://localhost:5000/api/admin/enquiries/${id}`, {
+        status: newStatus,
+      });
+      window.toast('Message status updated.', 'success');
+      refresh();
+    } catch (error) {
+      console.error('Failed to update status:', error);
+      window.toast('Failed to update status.', 'error');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    window.showConfirm('Delete this message?', async () => {
+      try {
+        await axios.delete(`http://localhost:5000/api/admin/enquiries/${id}`);
+        window.toast('Message deleted.', 'success');
+        refresh();
+      } catch (error) {
+        console.error('Failed to delete message:', error);
+        window.toast('Failed to delete message.', 'error');
+      }
+    });
+  };
+
+  return (
+    <AdminShell
+      active="admin-messages"
+      navigate={navigate}
+      title="User Messages & Enquiries"
+      subtitle="View and manage messages sent by users from the website contact page"
+      searchVal={q}
+      onSearchChange={setQ}
+      actions={
+        <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="w-44">
+          <option value="all">All Status</option>
+          <option value="New">New</option>
+          <option value="Contacted">Contacted</option>
+          <option value="Closed">Closed</option>
+        </Select>
+      }
+    >
+      <div className="card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Sender</th>
+                <th>Contact</th>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan="7" className="text-center text-muted py-8">
+                    No messages found.
+                  </td>
+                </tr>
+              )}
+              {filtered.map((m) => (
+                <tr key={m.id}>
+                  <td className="text-xs text-muted whitespace-nowrap">{m.date_submitted || new Date(m.created_at).toISOString().split('T')[0]}</td>
+                  <td>
+                    <div className="font-semibold text-deep">{m.name}</div>
+                  </td>
+                  <td>
+                    <div className="text-xs">{m.email}</div>
+                    <div className="text-xs text-muted">{m.phone}</div>
+                  </td>
+                  <td>
+                    <div className="font-semibold text-xs text-primary max-w-xs truncate">{m.subject}</div>
+                  </td>
+                  <td>
+                    <p className="text-xs text-muted max-w-md whitespace-pre-wrap">{m.message}</p>
+                  </td>
+                  <td>
+                    <StatusBadge status={m.status} />
+                  </td>
+                  <td>
+                    <div className="flex items-center gap-1">
+                      {m.status === 'New' && (
+                        <Btn variant="softPurple" size="sm" onClick={() => updateStatus(m.id, 'Contacted')}>
+                          Mark Contacted
+                        </Btn>
+                      )}
+                      {m.status === 'Contacted' && (
+                        <Btn variant="softPurple" size="sm" onClick={() => updateStatus(m.id, 'Closed')}>
+                          Mark Closed
+                        </Btn>
+                      )}
+                      {m.status === 'Closed' && (
+                        <span className="text-xs text-success font-semibold px-2">Handled</span>
+                      )}
+                      <IconBtn icon="trash" tip="Delete" danger onClick={() => handleDelete(m.id)} />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </AdminShell>
+  );
+}
+
+Object.assign(window, { AdminLoginPage, AdminDashboard, AdminAppointmentsPage, AdminDoctorsPage, AdminDepartmentsPage, AdminFeesPage, AdminSettingsPage, AdminBlogPage, AdminMessagesPage });

@@ -17,8 +17,7 @@ export const appointmentValidator = [
     .trim(),
   body('email')
     .optional({ checkFalsy: true })
-    .isEmail().withMessage('Please enter a valid email address.')
-    .normalizeEmail(),
+    .isEmail().withMessage('Please enter a valid email address.'),
   body('age')
     .notEmpty().withMessage('Age is required.')
     .isInt({ min: 0, max: 130 }).withMessage('Please enter a valid age between 0 and 130.'),
@@ -54,8 +53,7 @@ export const enquiryValidator = [
     .trim(),
   body('email')
     .optional({ checkFalsy: true })
-    .isEmail().withMessage('Please enter a valid email address.')
-    .normalizeEmail(),
+    .isEmail().withMessage('Please enter a valid email address.'),
   body('subject')
     .notEmpty().withMessage('Subject is required.')
     .trim(),

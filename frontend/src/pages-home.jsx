@@ -160,7 +160,7 @@ export function QuickServiceCards({ navigate }) {
       tone: 'deep',
     },
     {
-      title: 'Make an Appointment',
+      title: 'Book an Appointment',
       desc: 'Schedule your consultation with our specialists at your convenience, online or by phone.',
       icon: 'calendar',
       cta: { label: 'Get started', go: 'appointment' },
@@ -305,7 +305,7 @@ export function PatientJourney() {
         </div>
         <div className="relative">
           <div className="hidden md:block absolute top-7 left-[6%] right-[6%] h-px bg-gradient-to-r from-transparent via-soft-lavender to-transparent"></div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-10">
             {steps.map((s) => (
               <div key={s.n} className="relative">
                 <div className="w-14 h-14 rounded-2xl grad-purple text-white flex items-center justify-center shadow-card relative z-10">
@@ -336,7 +336,7 @@ export function FacilitiesPreview({ navigate }) {
           </div>
           <Btn variant="ghost" onClick={()=>navigate('facilities')} iconRight={<UI name="arrowRight" className="w-4 h-4" />}>Explore Facilities</Btn>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {items.map(f => (
             <div key={f.name} className="card overflow-hidden group">
               <div className="relative">

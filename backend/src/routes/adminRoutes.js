@@ -41,4 +41,9 @@ router.delete('/articles/:id', adminController.deleteArticle);
 // Hospital Settings update (mounted at /settings)
 router.put('/settings', adminController.updateSettings);
 
+// Enquiries (Messages) CRUD
+router.get('/admin/enquiries', adminController.getEnquiries);
+router.put('/admin/enquiries/:id', adminController.updateEnquiryStatus);
+router.delete('/admin/enquiries/:id', adminController.deleteEnquiry);
+
 export default router;

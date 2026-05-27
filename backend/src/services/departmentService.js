@@ -21,7 +21,11 @@ export const departmentService = {
       .order('name', { ascending: true });
 
     if (error) throw error;
-    return data || [];
+    return (data || []).map(d => ({
+      ...d,
+      doctors: d.doctors_count || 0,
+      desc: d.description || ''
+    }));
   },
 
   /**
@@ -35,7 +39,11 @@ export const departmentService = {
       .maybeSingle();
 
     if (error) throw error;
-    return data;
+    return data ? {
+      ...data,
+      doctors: data.doctors_count || 0,
+      desc: data.description || ''
+    } : null;
   },
 
   /**
@@ -59,7 +67,11 @@ export const departmentService = {
       .single();
 
     if (error) throw error;
-    return data;
+    return data ? {
+      ...data,
+      doctors: data.doctors_count || 0,
+      desc: data.description || ''
+    } : null;
   },
 
   /**
@@ -85,7 +97,11 @@ export const departmentService = {
       .maybeSingle();
 
     if (error) throw error;
-    return data;
+    return data ? {
+      ...data,
+      doctors: data.doctors_count || 0,
+      desc: data.description || ''
+    } : null;
   },
 
   /**
