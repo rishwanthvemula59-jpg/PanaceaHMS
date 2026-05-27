@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: #0F0A1A;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3,h4,h5 {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  .display { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; }
+  .grad-purple { background: linear-gradient(135deg, #6D28D9 0%, #4C1D95 100%); }
+  .grad-purple-soft { background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%); }
+  .grad-deep { background: linear-gradient(135deg, #2E1065 0%, #4C1D95 60%, #6D28D9 100%); }
+  .grad-navy { background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%); }
+  .text-grad { background: linear-gradient(135deg, #6D28D9, #D946EF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .btn-primary { background: linear-gradient(135deg, #6D28D9 0%, #5B21B6 100%); color: #fff; box-shadow: 0 10px 24px -10px rgba(109,40,217,.55); transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
+  .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 16px 32px -12px rgba(109,40,217,.6); }
+  .btn-ghost { background: #fff; color: #2E1065; border: 1px solid #EDE9FE; transition: all .15s ease; }
+  .btn-ghost:hover { background: #F5F3FF; border-color: #DDD6FE; }
+  .btn-emergency { background: #DC2626; color: #fff; box-shadow: 0 10px 24px -10px rgba(220,38,38,.55); transition: all .15s ease; }
+  .btn-emergency:hover { background: #B91C1C; transform: translateY(-1px); }
+  .chip { display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .75rem; border-radius: 999px; font-size:.78rem; font-weight:600; }
+  .card { background:#fff; border-radius: 1.25rem; box-shadow: 0 1px 2px rgba(46,16,101,.04), 0 8px 24px -8px rgba(46,16,101,.08); transition: transform .2s ease, box-shadow .2s ease; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(46,16,101,.06), 0 24px 48px -16px rgba(46,16,101,.18); }
+  .ph-stripe { background-image: repeating-linear-gradient(135deg, rgba(109,40,217,.03) 0 12px, rgba(109,40,217,.01) 12px 24px); }
+  .ph-stripe-dark { background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.08) 0 12px, rgba(255,255,255,.02) 12px 24px); }
+  
+  /* hide scrollbars on horizontal scrollers */
+  .no-scrollbar::-webkit-scrollbar { display:none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  
+  /* table */
+  .tbl { width:100%; border-collapse: separate; border-spacing: 0; }
+  .tbl th { text-align:left; font-size:.72rem; letter-spacing:.06em; text-transform: uppercase; color:#6B6478; font-weight:600; padding: 14px 16px; border-bottom: 1px solid #EDE9FE; }
+  .tbl td { padding: 16px; border-bottom: 1px solid #F5F3FF; font-size:.9rem; color:#1B1226; vertical-align: middle; }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .tbl tr:hover td { background: #FAF5FF; }
+  
+  /* form */
+  .field { width:100%; padding: 12px 14px; border:1px solid #DDD6FE; border-radius: 12px; background:#fff; font-size:.95rem; transition: border-color .15s ease, box-shadow .15s ease; }
+  .field:focus { outline: none; border-color:#7C3AED; box-shadow: 0 0 0 4px rgba(124,58,237,.15); }
+  .label { display:block; font-size:.82rem; font-weight:600; color:#2E1065; margin-bottom: 6px; }
+  
+  /* subtle bg pattern */
+  .bg-medical-pattern {
+    background-color:#F5F3FF;
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(124,58,237,.06) 0 1.5px, transparent 2px),
+      radial-gradient(circle at 78% 64%, rgba(109,40,217,.04) 0 1.5px, transparent 2px),
+      radial-gradient(circle at 38% 82%, rgba(124,58,237,.03) 0 1.5px, transparent 2px);
+    background-size: 220px 220px, 280px 280px, 200px 200px;
+  }
+}
+
+@layer utilities {
+  .marquee { display:flex; animation: marquee 40s linear infinite; }
+  .fade-up { animation: fadeUp .35s ease both; }
+}
+
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
